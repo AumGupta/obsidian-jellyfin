@@ -1,9 +1,9 @@
 {
-  "name": "Obsidian for Jellyfin",
-  "short_name": "Obsidian",
+  "name": "Abyss for Jellyfin",
+  "short_name": "Abyss",
   "description": "A clean, minimal dark theme for Jellyfin with frosted glass surfaces, refined typography, and smooth transitions.",
-  "start_url": "/obsidian-jellyfin/",
-  "scope": "/obsidian-jellyfin/",
+  "start_url": "/abyss-jellyfin/",
+  "scope": "/abyss-jellyfin/",
   "display": "standalone",
   "orientation": "any",
   "theme_color": "#080808",

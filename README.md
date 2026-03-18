@@ -1,19 +1,19 @@
 <div align="center">
 
-# [Obsidian](https://aumgupta.github.io/obsidian-jellyfin/) for Jellyfin
+# [Abyss](https://aumgupta.github.io/abyss-jellyfin/) for Jellyfin
 
-![GitHub License](https://img.shields.io/github/license/AumGupta/obsidian-jellyfin?style=for-the-badge&color=1a1a1a)
-![GitHub repo size](https://img.shields.io/github/repo-size/AumGupta/obsidian-jellyfin?style=for-the-badge)
-![GitHub Release](https://img.shields.io/github/v/release/AumGupta/obsidian-jellyfin?style=for-the-badge&color=1a1a1a)
+![GitHub License](https://img.shields.io/github/license/AumGupta/abyss-jellyfin?style=for-the-badge&color=1a1a1a)
+![GitHub Release](https://img.shields.io/github/v/release/AumGupta/abyss-jellyfin?style=for-the-badge&color=1a1a1a)
+![GitHub repo size](https://img.shields.io/github/repo-size/AumGupta/abyss-jellyfin?style=for-the-badge)
 
-<img alt="Obsidian Logo" src="docs/assets/favicon/apple-touch-icon.png" style="width: 72px;">
+<img alt="Abyss Logo" src="docs/assets/favicon/apple-touch-icon.png" style="width: 72px;">
 
 A clean and minimal theme for [Jellyfin](https://jellyfin.org): frosted glass surfaces, refined typography, smooth transitions, and a minimal aesthetic drawing from iOS and macOS design language.
 
 </div>
 
 <div align="center">
-  <a href="https://aumgupta.github.io/obsidian-jellyfin/">
+  <a href="https://aumgupta.github.io/abyss-jellyfin/">
     <img src="https://img.shields.io/badge/Preview%20%26%20Install-→-f5f5f7?style=for-the-badge&labelColor=1a1a1a" alt="Preview & Install" width="220" />
   </a>
 </div>
@@ -23,7 +23,7 @@ A clean and minimal theme for [Jellyfin](https://jellyfin.org): frosted glass su
 Paste this single line into **Dashboard > Branding > Custom CSS** and save:
 
 ```css
-@import url('https://cdn.jsdelivr.net/gh/AumGupta/obsidian-jellyfin@main/obsidian.css');
+@import url('https://cdn.jsdelivr.net/gh/AumGupta/abyss-jellyfin@main/abyss.css');
 ```
 
 ## Preview
@@ -87,24 +87,24 @@ Paste this single line into **Dashboard > Branding > Custom CSS** and save:
 - **Customisable**: three CSS variables let you retheme without touching the rest of the file
 
 > [!CAUTION]
-> **\*** Make sure that you set `My Media` as your "Home screen section 1". If not, go to `Settings > Home > Home screen` and set section 1 to `My Media`. This is required because Obsidian hides the card text of the first section.
+> **\*** Make sure that you set `My Media` as your "Home screen section 1". If not, go to `Settings > Home > Home screen` and set section 1 to `My Media`. This is required because Abyss hides the card text of the first section.
 
 ## Customisation
 
 Override any of these variables at the top of your **Custom CSS** field, after the `@import` line:
 
 ```css
-@import url('https://cdn.jsdelivr.net/gh/AumGupta/obsidian-jellyfin@main/obsidian.css');
+@import url('https://cdn.jsdelivr.net/gh/AumGupta/abyss-jellyfin@main/abyss.css');
 
 :root {
     /* Accent colour: R, G, B only, no rgb() wrapper */
-    --obsidian-accent: 245, 245, 247;   /* default: near-white */
+    --abyss-accent: 245, 245, 247;   /* default: near-white */
 
     /* Corner rounding applied globally */
-    --obsidian-radius: 12px;            /* default: 12px */
+    --abyss-radius: 12px;            /* default: 12px */
 
     /* Episode count / indicator pill background */
-    --obsidian-indicator: 55, 55, 55;   /* default: dark grey (Not changed with accent for better UX)*/
+    --abyss-indicator: 55, 55, 55;   /* default: dark grey (Not changed with accent for better UX)*/
 }
 ```
 
@@ -121,7 +121,7 @@ Override any of these variables at the top of your **Custom CSS** field, after t
 > [!NOTE]
 > You can also change the font by adding a *Google Fonts* (or any other source) `@import` and overriding the `body` font-family after your theme import. For example, to use [Inter](https://fonts.google.com/specimen/Inter):
 > ```css
-> @import url('https://cdn.jsdelivr.net/gh/AumGupta/obsidian-jellyfin@main/obsidian.css');
+> @import url('https://cdn.jsdelivr.net/gh/AumGupta/abyss-jellyfin@main/abyss.css');
 > @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 >
 > body {
@@ -143,12 +143,12 @@ Override any of these variables at the top of your **Custom CSS** field, after t
 | 10.9.x | ✅ Should work |
 | Earlier | ⚠️ Untested |
 
-> Obsidian targets the **desktop web client**. Mobile layout tweaks are included but the experience is optimised for desktop.
+> Abyss targets the **desktop web client**. Mobile layout tweaks are included but the experience is optimised for desktop.
 
 <details>
 <summary>Notes</summary>
 
-- The **Jellyfin admin dashboard** (`/dashboard`) is a separate React app and does not load Custom CSS. Obsidian styles the main client only (home, libraries, detail pages, player).
+- The **Jellyfin admin dashboard** (`/dashboard`) is a separate React app and does not load Custom CSS. Abyss styles the main client only (home, libraries, detail pages, player).
 - The `section0` selector hides card text specifically in the **My Media** row. If you reorder your home sections, update this selector to match the new position.
 - Backdrop blur requires `backdrop-filter` support: Chrome, Edge, Safari, and Firefox 103+.
 
@@ -156,11 +156,11 @@ Override any of these variables at the top of your **Custom CSS** field, after t
 
 ## Contributing & Support
 
-Pull requests are welcome. For suggestions, feature requests, or bug reports, open an issue on the [Issues](https://github.com/AumGupta/obsidian-jellyfin/issues) page. Please include your Jellyfin version and a screenshot where relevant.
+Pull requests are welcome. For suggestions, feature requests, or bug reports, open an issue on the [Issues](https://github.com/AumGupta/abyss-jellyfin/issues) page. Please include your Jellyfin version and a screenshot where relevant.
 
 ## License
 
-Obsidian Jellyfin is licensed under the [MIT License](https://github.com/AumGupta/obsidian-jellyfin?tab=MIT-1-ov-file).
+Abyss Jellyfin is licensed under the [MIT License](https://github.com/AumGupta/abyss-jellyfin?tab=MIT-1-ov-file).
 
 ## Credits
 

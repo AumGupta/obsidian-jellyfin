@@ -1,20 +1,14 @@
 /* =============================================================================
 
-   ██████  ██████  ███████ ██ ██████  ██  █████  ███    ██
-  ██    ██ ██   ██ ██      ██ ██   ██ ██ ██   ██ ████   ██
-  ██    ██ ██████  ███████ ██ ██   ██ ██ ███████ ██ ██  ██
-  ██    ██ ██   ██      ██ ██ ██   ██ ██ ██   ██ ██  ██ ██
-   ██████  ██████  ███████ ██ ██████  ██ ██   ██ ██   ████
-
   A clean and minimal theme for Jellyfin.
-  https://github.com/AumGupta/obsidian-jellyfin
+  https://github.com/AumGupta/abyss-jellyfin
 
 ============================================================================= */
 
 
 /* =============================================================================
    1. IMPORTS & FONTS
-   - Override this to customise font of Obsidian for your setup.
+   - Override this to customise font of abyss for your setup.
    ============================================================================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
@@ -29,19 +23,19 @@
 
 /* =============================================================================
    2. THEME VARIABLES
-   — Override these to customise Obsidian for your setup.
+   — Override these to customise abyss for your setup.
 ============================================================================= */
 
 :root {
     /* Primary accent colour — used for highlights, active states, progress bars.
        Format: R, G, B (no rgb() wrapper) so opacity variants work cleanly. */
-    --obsidian-accent: 245, 245, 247;
+    --abyss-accent: 245, 245, 247;
 
     /* Corner rounding applied globally */
-    --obsidian-radius: 12px;
+    --abyss-radius: 12px;
 
     /* Indicator pill background (episode count, etc.) */
-    --obsidian-indicator: 55, 55, 55;
+    --abyss-indicator: 55, 55, 55;
 }
 
 
@@ -73,7 +67,7 @@ body {
 }
 
 * {
-    scrollbar-color: rgba(var(--obsidian-accent), 0.8) #0000 !important;
+    scrollbar-color: rgba(var(--abyss-accent), 0.8) #0000 !important;
 }
 
 ::-webkit-scrollbar-track-piece {
@@ -83,8 +77,8 @@ body {
     background-color: #0000;
 }
 ::-webkit-scrollbar-thumb {
-    background: rgba(var(--obsidian-accent), 0.8) !important;
-    border-radius: var(--obsidian-radius);
+    background: rgba(var(--abyss-accent), 0.8) !important;
+    border-radius: var(--abyss-radius);
 }
 
 fieldset {
@@ -93,42 +87,42 @@ fieldset {
 }
 
 progress {
-    border-radius: var(--obsidian-radius);
+    border-radius: var(--abyss-radius);
     background: rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(var(--obsidian-accent), 0.22);
+    border: 1px solid rgba(var(--abyss-accent), 0.22);
 }
 progress::-webkit-progress-bar {
-    border-radius: var(--obsidian-radius);
+    border-radius: var(--abyss-radius);
     background: rgba(0, 0, 0, 0.5) !important;
-    border: 0px solid rgba(var(--obsidian-accent), 0.22);
+    border: 0px solid rgba(var(--abyss-accent), 0.22);
 }
 progress::-moz-progress-bar {
-    border-radius: var(--obsidian-radius);
-    background-color: rgba(var(--obsidian-accent), 0.75);
+    border-radius: var(--abyss-radius);
+    background-color: rgba(var(--abyss-accent), 0.75);
 }
 progress::-webkit-progress-value {
-    border-radius: var(--obsidian-radius);
-    background-color: rgba(var(--obsidian-accent), 0.75);
+    border-radius: var(--abyss-radius);
+    background-color: rgba(var(--abyss-accent), 0.75);
 }
 
 .taskProgressOuter,
 .taskProgressInner {
-    border-radius: var(--obsidian-radius) !important;
+    border-radius: var(--abyss-radius) !important;
 }
 .taskProgressOuter {
     background: rgba(0, 0, 0, 0.5) !important;
-    border: 1px solid rgba(var(--obsidian-accent), 0.22);
+    border: 1px solid rgba(var(--abyss-accent), 0.22);
 }
 .taskProgressInner,
 .sliderMarker.watched {
-    background: rgba(var(--obsidian-accent), 0.75) !important;
+    background: rgba(var(--abyss-accent), 0.75) !important;
 }
 
 #divRunningTasks span {
-    color: rgba(var(--obsidian-accent), 0.75) !important;
+    color: rgba(var(--abyss-accent), 0.75) !important;
 }
 #scheduledTasksPage span {
-    color: rgba(var(--obsidian-accent), 0.75) !important;
+    color: rgba(var(--abyss-accent), 0.75) !important;
 }
 
 
@@ -181,7 +175,7 @@ progress::-webkit-progress-value {
 }
 
 .starIcon {
-    color: rgba(var(--obsidian-accent), .8);
+    color: rgba(var(--abyss-accent), .8);
 }
 
 
@@ -372,7 +366,7 @@ a[data-role="button"] {
 .raised:hover,
 .fab:hover,
 a[data-role="button"]:hover {
-    background: rgba(var(--obsidian-accent), 0.5) !important;
+    background: rgba(var(--abyss-accent), 0.5) !important;
 }
 
 .raised:hover,
@@ -380,7 +374,7 @@ a[data-role="button"]:hover {
 .navMenuOption:hover,
 .actionSheetMenuItem:hover,
 .css-17c09up:hover {
-    background: rgb(var(--obsidian-accent)) !important;
+    background: rgb(var(--abyss-accent)) !important;
     color: #121212;
     font-weight: 700;
 }
@@ -403,15 +397,15 @@ a[data-role="button"]:hover {
 }
 
 .paper-icon-button-light {
-    border-radius: var(--obsidian-radius);
+    border-radius: var(--abyss-radius);
 }
 
 .emby-button.show-focus:focus {
-    background: rgba(var(--obsidian-accent), 0.5) !important;
+    background: rgba(var(--abyss-accent), 0.5) !important;
 }
 
 .paper-icon-button-light.show-focus:focus {
-    color: rgb(var(--obsidian-accent)) !important;
+    color: rgb(var(--abyss-accent)) !important;
 }
 
 .emby-tab-button {
@@ -420,7 +414,7 @@ a[data-role="button"]:hover {
 }
 
 .emby-tab-button-active {
-    background: rgb(var(--obsidian-accent));
+    background: rgb(var(--abyss-accent));
     color: #121212;
     border-radius: 50px;
 }
@@ -431,7 +425,7 @@ a[data-role="button"]:hover {
 
 .button-flat:hover {
     background: rgba(0, 0, 0, 0.4);
-    color: rgb(var(--obsidian-accent)) !important;
+    color: rgb(var(--abyss-accent)) !important;
 }
 
 .detailButton {
@@ -452,7 +446,7 @@ a[data-role="button"]:hover {
 .textareaLabelFocused,
 .buttonActive,
 .button-link {
-    color: rgb(var(--obsidian-accent));
+    color: rgb(var(--abyss-accent));
 }
 
 #itemDetailPage .button-link {
@@ -487,7 +481,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
     transition: background 0.37s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 border-color 0.37s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 box-shadow 0.37s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    border: solid 1px rgba(var(--obsidian-accent), 0) !important;
+    border: solid 1px rgba(var(--abyss-accent), 0) !important;
 }
 
 .raised.homeLibraryButton:hover {
@@ -502,13 +496,13 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .formDialogHeader {
-    border-top-left-radius: var(--obsidian-radius);
-    border-top-right-radius: var(--obsidian-radius);
+    border-top-left-radius: var(--abyss-radius);
+    border-top-right-radius: var(--abyss-radius);
 }
 
 .formDialogFooter {
-    border-bottom-left-radius: var(--obsidian-radius);
-    border-bottom-right-radius: var(--obsidian-radius);
+    border-bottom-left-radius: var(--abyss-radius);
+    border-bottom-right-radius: var(--abyss-radius);
 }
 
 .formDialogFooter-clear,
@@ -543,8 +537,8 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .cardOverlayContainer {
-    border-radius: var(--obsidian-radius) !important;
-    border: solid 1px rgba(var(--obsidian-accent), 0.0) !important;
+    border-radius: var(--abyss-radius) !important;
+    border: solid 1px rgba(var(--abyss-accent), 0.0) !important;
     transition: border-color 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
@@ -558,7 +552,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
 .cardPadder {
     background-color: #0000 !important;
     box-shadow: none !important;
-    border-radius: var(--obsidian-radius) !important;
+    border-radius: var(--abyss-radius) !important;
 }
 
 .card.show-animation:focus > .cardBox {
@@ -581,7 +575,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
     top: 0.5em;
     background: rgba(0, 0, 0, 0.4);
     box-shadow: none;
-    border-radius: var(--obsidian-radius);
+    border-radius: var(--abyss-radius);
 }
 
 .innerCardFooter {
@@ -591,7 +585,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .countIndicator {
-    background: rgba(var(--obsidian-indicator), 0.8);
+    background: rgba(var(--abyss-indicator), 0.8);
     box-shadow: none;
     border-radius: 10px !important;
     padding: 4px;
@@ -622,11 +616,11 @@ div[data-role="controlgroup"] a[data-role="button"] {
 
 .transcodingProgress > div,
 .itemProgressBarForeground {
-    background-color: rgba(var(--obsidian-accent), 0.3);
+    background-color: rgba(var(--abyss-accent), 0.3);
 }
 
 .playbackProgress > div {
-    background-color: rgba(var(--obsidian-accent), 0.75);
+    background-color: rgba(var(--abyss-accent), 0.75);
 }
 
 .backgroundProgress > div {
@@ -641,22 +635,22 @@ div[data-role="controlgroup"] a[data-role="button"] {
 /* --- Sliders --- */
 
 .mdl-slider-background-lower {
-    background-color: rgb(var(--obsidian-accent));
+    background-color: rgb(var(--abyss-accent));
 }
 
 .mdl-slider::-moz-range-thumb {
-    border-radius: var(--obsidian-radius);
-    background: rgb(var(--obsidian-accent));
+    border-radius: var(--abyss-radius);
+    background: rgb(var(--abyss-accent));
 }
 
 .mdl-slider::-ms-thumb {
-    border-radius: var(--obsidian-radius);
-    background: rgb(var(--obsidian-accent));
+    border-radius: var(--abyss-radius);
+    background: rgb(var(--abyss-accent));
 }
 
 .mdl-slider::-webkit-slider-thumb {
-    border-radius: var(--obsidian-radius);
-    background: rgb(var(--obsidian-accent));
+    border-radius: var(--abyss-radius);
+    background: rgb(var(--abyss-accent));
 }
 
 .sliderMarker {
@@ -667,16 +661,16 @@ div[data-role="controlgroup"] a[data-role="button"] {
 /* --- Toggle Switches --- */
 
 .mdl-switch__input:checked + .mdl-switch__label + .mdl-switch__trackContainer > .mdl-switch__track {
-    background: rgba(var(--obsidian-accent), 0.5);
+    background: rgba(var(--abyss-accent), 0.5);
 }
 
 .mdl-switch__input:checked + .mdl-switch__label + .mdl-switch__trackContainer > .mdl-switch__thumb {
-    background: rgb(var(--obsidian-accent));
+    background: rgb(var(--abyss-accent));
 }
 
 /* --- Spinner --- */
 
-.mdl-spinner__layer-1 { border-color: rgb(var(--obsidian-accent)); }
+.mdl-spinner__layer-1 { border-color: rgb(var(--abyss-accent)); }
 .mdl-spinner__layer-2 { border-color: rgba(128, 128, 128, 1); }
 .mdl-spinner__layer-3 { border-color: rgba(40, 40, 40, 1); }
 .mdl-spinner__layer-4 { border-color: rgba(0, 0, 0, 1); }
@@ -684,7 +678,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
 /* --- Progress Ring --- */
 
 .progressring-spiner {
-    border-color: rgb(var(--obsidian-accent));
+    border-color: rgb(var(--abyss-accent));
     border-width: .35em;
 }
 
@@ -706,16 +700,16 @@ div[data-role="controlgroup"] a[data-role="button"] {
 .listItem:hover {
     transition: background 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     background: rgba(0, 0, 0, 0.4);
-    border-radius: var(--obsidian-radius) !important;
+    border-radius: var(--abyss-radius) !important;
 }
 
 .listItem-border {
-    border-color: rgba(var(--obsidian-accent), 0) !important;
+    border-color: rgba(var(--abyss-accent), 0) !important;
 }
 
 .listItemIcon {
     background: #0000 !important;
-    border-radius: var(--obsidian-radius) !important;
+    border-radius: var(--abyss-radius) !important;
 }
 
 .listItem-indexnumberleft {
@@ -725,7 +719,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
 .listItemImageButton {
     margin: auto;
     font-size: 1.6em !important;
-    border-radius: var(--obsidian-radius) !important;
+    border-radius: var(--abyss-radius) !important;
 }
 
 .listItemImageButton-icon {
@@ -733,7 +727,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .listItemImageButton:hover {
-    color: rgb(var(--obsidian-accent));
+    color: rgb(var(--abyss-accent));
 }
 
 .secondary.listItem-overview.listItemBodyText {
@@ -796,14 +790,14 @@ div[data-role="controlgroup"] a[data-role="button"] {
 /* --- Sync Play --- */
 
 .syncPlayIconCircle {
-    color: rgb(var(--obsidian-accent)) !important;
+    color: rgb(var(--abyss-accent)) !important;
     text-shadow: none !important;
 }
 
 /* --- Subtitle Preview --- */
 
 .subtitleappearance-preview {
-    background: linear-gradient(140deg, rgb(var(--obsidian-accent)), #111) !important;
+    background: linear-gradient(140deg, rgb(var(--abyss-accent)), #111) !important;
 }
 
 
@@ -848,37 +842,37 @@ div[data-role="controlgroup"] a[data-role="button"] {
 .upNextContainer,
 .cardOverlayButtonIcon,
 .innerCardFooter {
-    border-radius: var(--obsidian-radius) !important;
+    border-radius: var(--abyss-radius) !important;
 }
 
 .osdPoster img {
-    border-radius: var(--obsidian-radius);
+    border-radius: var(--abyss-radius);
     border: none;
 }
 
 div[data-role="controlgroup"] a[data-role="button"]:first-child {
-    border-bottom-left-radius: var(--obsidian-radius);
-    border-top-left-radius: var(--obsidian-radius);
+    border-bottom-left-radius: var(--abyss-radius);
+    border-top-left-radius: var(--abyss-radius);
 }
 
 div[data-role="controlgroup"] a[data-role="button"]:last-child {
-    border-bottom-right-radius: var(--obsidian-radius);
-    border-top-right-radius: var(--obsidian-radius);
+    border-bottom-right-radius: var(--abyss-radius);
+    border-top-right-radius: var(--abyss-radius);
 }
 
 #dashboardPage .cardContent,
 #dashboardPage .sessionNowPlayingInnerContent {
-    border-radius: var(--obsidian-radius) var(--obsidian-radius) 0 0 !important;
+    border-radius: var(--abyss-radius) var(--abyss-radius) 0 0 !important;
 }
 
 #divVirtualFolders .cardImageContainer,
 #divVirtualFolders .cardContent {
-    border-radius: var(--obsidian-radius) var(--obsidian-radius) 0 0 !important;
+    border-radius: var(--abyss-radius) var(--abyss-radius) 0 0 !important;
 }
 
 #userProfilesPage .cardImage,
 #userProfilesPage .cardContent {
-    border-radius: var(--obsidian-radius) var(--obsidian-radius) 0 0 !important;
+    border-radius: var(--abyss-radius) var(--abyss-radius) 0 0 !important;
 }
 
 
@@ -891,7 +885,7 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
 }
 
 .osdPoster img {
-    border-radius: var(--obsidian-radius);
+    border-radius: var(--abyss-radius);
     border: none;
 }
 
@@ -926,11 +920,11 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
 }
 
 .upNextDialog-countdownText {
-    color: rgb(var(--obsidian-accent));
+    color: rgb(var(--abyss-accent));
 }
 
 .iconOsdProgressInner {
-    background: rgb(var(--obsidian-accent));
+    background: rgb(var(--abyss-accent));
 }
 
 /* Chapter thumb */
@@ -976,21 +970,21 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
 }
 
 #dashboardPage .playbackProgress > div {
-    background-color: rgba(var(--obsidian-accent), 0.75) !important;
+    background-color: rgba(var(--abyss-accent), 0.75) !important;
 }
 
 #dashboardPage .transcodingProgress > div {
-    background-color: rgba(var(--obsidian-accent), 0.35) !important;
+    background-color: rgba(var(--abyss-accent), 0.35) !important;
 }
 
 .css-4yt2of {
     background-color: rgba(0, 0, 0, 0.2);
-    border-right: 1px solid rgba(var(--obsidian-accent), 0.12);
+    border-right: 1px solid rgba(var(--abyss-accent), 0.12);
 }
 
 .navMenuOption-selected,
 .css-17c09up.Mui-selected {
-    color: rgb(var(--obsidian-accent));
+    color: rgb(var(--abyss-accent));
 }
 
 
@@ -1032,13 +1026,13 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
 #indexPage .itemProgressBar,
 .libraryPage .itemProgressBar,
 #itemDetailPage .itemProgressBar {
-    border-radius: var(--obsidian-radius);
+    border-radius: var(--abyss-radius);
 }
 
 #indexPage .itemProgressBarForeground,
 .libraryPage .itemProgressBarForeground,
 #itemDetailPage .itemProgressBarForeground {
-    background-color: rgba(var(--obsidian-accent), 0.95) !important;
+    background-color: rgba(var(--abyss-accent), 0.95) !important;
 }
 
 #indexPage .itemProgressBar,
