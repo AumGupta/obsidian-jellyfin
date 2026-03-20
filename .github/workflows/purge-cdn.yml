@@ -1,0 +1,15 @@
+name: Purge jsDelivr CDN
+
+on:
+  push:
+    paths:
+      - 'abyss.css'
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge jsDelivr cache for abyss.css
+        run: |
+          curl -s "https://purge.jsdelivr.net/gh/AumGupta/abyss-jellyfin@main/abyss.css"
+          echo "CDN purge triggered for abyss.css"
