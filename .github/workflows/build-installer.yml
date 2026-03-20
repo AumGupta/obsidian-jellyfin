@@ -1,0 +1,54 @@
+name: Build Installer
+
+on:
+  push:
+    paths:
+      - 'setup.ps1'
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PS2EXE
+        run: Install-Module ps2exe -Force -Scope CurrentUser
+        shell: powershell
+
+      - name: Get version
+        id: version
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $version = if ($tag -match '^\d') { $tag } else { "1.0.0" }
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+        shell: powershell
+
+      - name: Build setup.exe
+        run: |
+          Invoke-PS2EXE `
+            -InputFile .\setup.ps1 `
+            -OutputFile .\abyss-setup-v${{ steps.version.outputs.VERSION }}.exe `
+            -Title "Abyss Theme Setup" `
+            -Description "Installer for Abyss - a clean minimal Jellyfin theme" `
+            -Company "AumGupta" `
+            -Product "Abyss" `
+            -Version "${{ steps.version.outputs.VERSION }}" `
+            -IconFile ".\docs\assets\favicon\favicon.ico" `
+            -NoConsole:$false
+        shell: powershell
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'release'
+        with:
+          files: abyss-setup-v${{ steps.version.outputs.VERSION }}.exe
+
+      - name: Upload as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: abyss-setup-v${{ steps.version.outputs.VERSION }}
+          path: abyss-setup-v${{ steps.version.outputs.VERSION }}.exe
+          

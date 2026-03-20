@@ -1,11 +1,6 @@
-# ==============================================================================
-#  Abyss - Setup
-#  https://github.com/AumGupta/abyss-jellyfin
-# ==============================================================================
-
 $ErrorActionPreference = "Stop"
 
-# ── Constants ─────────────────────────────────────────────────────────────────
+#  Constants 
 
 $REPO     = "AumGupta/abyss-jellyfin"
 $BRANCH   = "main"
@@ -18,7 +13,7 @@ $SPOTLIGHT_FILES = @(
     "scripts/spotlight/home-html.chunk.js"
 )
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+#  Helpers 
 
 function Write-Step { param($msg) Write-Host " $msg" -ForegroundColor Cyan }
 function Write-Ok   { param($msg) Write-Host " [+] $msg" -ForegroundColor Green }
@@ -59,7 +54,7 @@ function Show-Header {
     Write-Host ""
 }
 
-# ── Locate Jellyfin web directory ─────────────────────────────────────────────
+#  Locate Jellyfin web directory 
 
 function Get-JellyfinWebDir {
     $candidates = @(
@@ -81,7 +76,7 @@ function Get-JellyfinWebDir {
     return $path
 }
 
-# ── Download files ────────────────────────────────────────────────────────────
+#  Download files 
 
 function Get-AbyssFile {
     param($repoPath, $destPath)
@@ -124,7 +119,7 @@ function Sync-SpotlightFiles {
     Write-Host ""
 }
 
-# ── Authenticate ──────────────────────────────────────────────────────────────
+#  Authenticate 
 
 function Connect-Jellyfin {
     param($serverUrl)
@@ -184,7 +179,7 @@ function Get-ApiHeaders {
     }
 }
 
-# ── Install ───────────────────────────────────────────────────────────────────
+#  Install 
 
 function Install-Abyss {
     Show-Header "Installer"
@@ -343,7 +338,7 @@ function Install-Abyss {
     Read-Host " Press Enter to exit"
 }
 
-# ── Uninstall ─────────────────────────────────────────────────────────────────
+#  Uninstall 
 
 function Uninstall-Abyss {
     Show-Header "Uninstaller"
@@ -448,7 +443,7 @@ function Uninstall-Abyss {
     Read-Host " Press Enter to exit"
 }
 
-# ── Entry point ───────────────────────────────────────────────────────────────
+#  Entry point 
 
 $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 if (-not $isAdmin) {
