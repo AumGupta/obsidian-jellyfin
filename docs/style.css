@@ -338,37 +338,37 @@ code {
 }
 
 .screenshot-link {
-    display: block;
-    position: relative;
+  display: block;
+  position: relative;
 }
 
 .screenshot-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(6px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .screenshot-overlay span {
-    color: #fff;
-    font-size: 14px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.9;
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.9;
 }
 
 .screenshot-link:hover .screenshot-overlay {
-    opacity: 1;
+  opacity: 1;
 }
 
 .screenshot-link:hover img {
-    transform: scale(1.02);
-    transition: transform 0.4s ease;
+  transform: scale(1.02);
+  transition: transform 0.4s ease;
 }
 
 .btn {
@@ -1132,6 +1132,68 @@ pre .str {
   gap: 12px;
   flex-wrap: wrap;
   margin-top: 20px;
+}
+
+.os-picker {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.os-card {
+  flex: 1;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+  font-family: var(--font);
+  color: var(--accent-dim);
+}
+
+.os-card:hover {
+  border-color: var(--border-hi);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--accent);
+}
+
+.os-card.active {
+  border-color: rgba(245, 245, 247, 0.4);
+  background: rgba(245, 245, 247, 0.07);
+  color: var(--accent);
+}
+
+.os-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.os-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.os-ext {
+  font-size: 0.72rem;
+  font-family: "SF Mono", "Fira Code", monospace;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.os-card.active .os-ext {
+  color: var(--accent-dim);
+  background: rgba(245, 245, 247, 0.1);
 }
 
 .footer {

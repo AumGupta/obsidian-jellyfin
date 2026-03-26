@@ -3,9 +3,9 @@
 # [Abyss](https://aumgupta.github.io/abyss-jellyfin/) for Jellyfin
 
 ![GitHub Release](https://img.shields.io/github/v/release/AumGupta/abyss-jellyfin?style=for-the-badge)
-![GitHub License](https://img.shields.io/github/license/AumGupta/abyss-jellyfin?style=for-the-badge)
+<!-- ![GitHub License](https://img.shields.io/github/license/AumGupta/abyss-jellyfin?style=for-the-badge) -->
 ![GitHub Downloads](https://img.shields.io/github/downloads/AumGupta/abyss-jellyfin/total?style=for-the-badge)
-<!-- ![jsDelivr Requests](https://img.shields.io/jsdelivr/gh/hm/AumGupta/abyss-jellyfin?style=for-the-badge&label=Usage&logo=none) -->
+![jsDelivr Requests](https://img.shields.io/jsdelivr/gh/hm/AumGupta/abyss-jellyfin?style=for-the-badge&label=Usage&logo=none)
 
 <img alt="Abyss Logo" src="docs/assets/favicon/apple-touch-icon.png" style="width: 72px;">
 
@@ -199,8 +199,8 @@ Override any of these variables at the top of your **Custom CSS** field, after t
 
 | Jellyfin version | Status |
 |---|---|
-| 10.10.x | Tested |
-| 10.9.x | Should work |
+| 10.11.x | Tested |
+| 10.10.x | Should work |
 | Earlier | Untested |
 
 > [!IMPORTANT]

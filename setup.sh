@@ -2,8 +2,8 @@
 set -euo pipefail
 
 # ==============================================================================
-# Abyss Jellyfin Theme - Linux Installer / Uninstaller
-# Port of https://github.com/AumGupta/abyss-jellyfin/blob/main/setup.ps1
+# Abyss Jellyfin Theme - Linux / macOS Installer / Uninstaller
+# https://github.com/AumGupta/abyss-jellyfin
 # ==============================================================================
 
 REPO="AumGupta/abyss-jellyfin"
@@ -16,6 +16,9 @@ SPOTLIGHT_FILES=(
     "scripts/spotlight/spotlight.css"
     "scripts/spotlight/home-html.chunk.js"
 )
+
+# Detect OS once at startup
+OS="$(uname -s)"
 
 # ------------------------------------------------------------------------------
 # Helpers
@@ -49,7 +52,12 @@ check_dependencies() {
     done
     if [[ ${#missing[@]} -gt 0 ]]; then
         fail "Missing required dependencies: ${missing[*]}"
-        info "Install them and re-run this script."
+        if [[ "$OS" == "Darwin" ]]; then
+            info "Install them via Homebrew: brew install ${missing[*]}"
+            info "Or install Xcode Command Line Tools: xcode-select --install"
+        else
+            info "Install them and re-run this script."
+        fi
         exit 1
     fi
 }
@@ -70,10 +78,16 @@ show_header() {
 
 get_jellyfin_web_dir() {
     local candidates=(
+        # Linux; native packages
         "/usr/share/jellyfin/web"
         "/usr/lib/jellyfin/web"
         "/var/lib/jellyfin/web"
         "/opt/jellyfin/web"
+        # macOS; Homebrew (intel and apple Silicon)
+        "/usr/local/share/jellyfin/web"
+        "/opt/homebrew/share/jellyfin/web"
+        "/opt/homebrew/opt/jellyfin/web"
+        "/usr/local/opt/jellyfin/web"
     )
 
     for p in "${candidates[@]}"; do
@@ -85,7 +99,11 @@ get_jellyfin_web_dir() {
 
     warn "Could not auto-detect Jellyfin web directory."
     echo -e "${yellow}  Enter the full path to your jellyfin-web folder:${reset}"
-    info "Example: /usr/share/jellyfin/web"
+    if [[ "$OS" == "Darwin" ]]; then
+        info "Example: /opt/homebrew/share/jellyfin/web"
+    else
+        info "Example: /usr/share/jellyfin/web"
+    fi
     read -rp "  Path: " path
     if [[ ! -d "$path" ]]; then
         exit_error "Directory not found: $path"
@@ -198,6 +216,45 @@ print(json.dumps({'Username': u, 'Pw': p}))
 get_api_header() {
     local token="$1"
     echo "MediaBrowser Client=\"Abyss Setup\", Device=\"Setup\", DeviceId=\"abyss-setup\", Version=\"1.0\", Token=\"${token}\""
+}
+
+# ------------------------------------------------------------------------------
+# Restart Jellyfin
+# ------------------------------------------------------------------------------
+
+restart_jellyfin() {
+    local server_url="$1"
+    local api_header="$2"
+
+    step "Restarting Jellyfin..."
+
+    # Try API restart first (works for all install methods)
+    if curl -fsSL \
+        -X POST "${server_url}/System/Restart" \
+        -H "X-Emby-Authorization: ${api_header}" >/dev/null 2>&1; then
+        ok "Restart triggered via API. Wait a few seconds then refresh."
+        return
+    fi
+
+    # macOS; try Homebrew services
+    if [[ "$OS" == "Darwin" ]]; then
+        if command -v brew &>/dev/null && brew services list 2>/dev/null | grep -q jellyfin; then
+            brew services restart jellyfin \
+                && ok "Jellyfin restarted via Homebrew." \
+                || warn "Could not restart via Homebrew. Restart Jellyfin manually."
+            return
+        fi
+    fi
+
+    # Linux; try systemctl
+    if command -v systemctl &>/dev/null && systemctl list-units --type=service 2>/dev/null | grep -q jellyfin; then
+        sudo systemctl restart jellyfin \
+            && ok "Jellyfin service restarted." \
+            || warn "Could not restart via systemctl. Restart Jellyfin manually."
+        return
+    fi
+
+    warn "Could not restart automatically. Please restart Jellyfin manually."
 }
 
 # ------------------------------------------------------------------------------
@@ -360,12 +417,7 @@ print(json.dumps(d))
     echo ""
 
     # Restart
-    step "Restarting Jellyfin..."
-    curl -fsSL \
-        -X POST "${server_url}/System/Restart" \
-        -H "X-Emby-Authorization: ${api_header}" >/dev/null 2>&1 \
-        && ok "Restart triggered. Wait a few seconds then refresh." \
-        || warn "Could not restart automatically. Please restart Jellyfin manually."
+    restart_jellyfin "$server_url" "$api_header"
 
     # Done
     echo ""
@@ -490,12 +542,7 @@ print(json.dumps(d))
     echo ""
 
     # Restart
-    step "Restarting Jellyfin..."
-    curl -fsSL \
-        -X POST "${server_url}/System/Restart" \
-        -H "X-Emby-Authorization: ${api_header}" >/dev/null 2>&1 \
-        && ok "Restart triggered. Wait a few seconds then refresh." \
-        || warn "Could not restart automatically. Please restart Jellyfin manually."
+    restart_jellyfin "$server_url" "$api_header"
 
     echo ""
     echo -e "${cyan}  ================================================${reset}"
@@ -515,8 +562,14 @@ print(json.dumps(d))
 # ------------------------------------------------------------------------------
 
 if [[ "$EUID" -ne 0 ]]; then
-    echo -e "${red}  This script must be run as root (sudo).${reset}"
-    exit 1
+    if [[ "$OS" == "Darwin" ]]; then
+        warn "Not running as root. Some file operations may require sudo."
+        info "If you encounter permission errors, re-run with: sudo bash setup.sh"
+        echo ""
+    else
+        echo -e "${red}  This script must be run as root (sudo).${reset}"
+        exit 1
+    fi
 fi
 
 check_dependencies

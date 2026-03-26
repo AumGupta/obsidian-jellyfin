@@ -33,41 +33,66 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
   });
 });
 
-// Fetch latest release from GitHub API and update download button
+// Fetch latest release and wire up OS picker
+const dlAssets = { win: null, lin: null };
+
 (async () => {
-  const btn_lin = document.getElementById('download-btn-lin');
-  const btn_win = document.getElementById('download-btn-win');
-  const label_lin = document.getElementById('download-label-lin');
-  const label_win = document.getElementById('download-label-win');
-
-  if (!btn_lin || !btn_win || !label_lin || !label_win) return;
-
   try {
     const res = await fetch('https://api.github.com/repos/AumGupta/abyss-jellyfin/releases/latest');
     if (!res.ok) return;
     const data = await res.json();
-
-    const tag = data.tag_name || '';
-    const asset_lin = (data.assets || []).find(a => a.name.endsWith('.sh'));
-    const asset_win = (data.assets || []).find(a => a.name.endsWith('.exe'));
-    console.log(asset_lin.name);
-    console.log(asset_win.name);
-
-    if (asset_lin && asset_win) {
-      btn_lin.href = asset_lin.browser_download_url;
-      btn_win.href = asset_win.browser_download_url;
-      label_lin.textContent = `Download ${asset_lin.name}`;
-      label_win.textContent = `Download ${asset_win.name}`;
-    } else {
-      btn_lin.href = data.html_url || btn_lin.href;
-      btn_win.href = data.html_url || btn_win.href;
-      if (tag) label_lin.textContent = `Download Installer ${tag}`;
-      if (tag) label_win.textContent = `Download Installer ${tag}`;
-    }
-  } catch (e) {
-    // Silently fall back to releases/latest link already set in href
-  }
+    dlAssets.lin = (data.assets || []).find(a => a.name.endsWith('.sh')) || null;
+    dlAssets.win = (data.assets || []).find(a => a.name.endsWith('.exe')) || null;
+    // Keep hidden anchors updated for any legacy references
+    const btnLin = document.getElementById('download-btn-lin');
+    const btnWin = document.getElementById('download-btn-win');
+    const lblLin = document.getElementById('download-label-lin');
+    const lblWin = document.getElementById('download-label-win');
+    if (btnLin && dlAssets.lin) { btnLin.href = dlAssets.lin.browser_download_url; }
+    if (btnWin && dlAssets.win) { btnWin.href = dlAssets.win.browser_download_url; }
+    if (lblLin && dlAssets.lin) { lblLin.textContent = dlAssets.lin.name; }
+    if (lblWin && dlAssets.win) { lblWin.textContent = dlAssets.win.name; }
+    // Auto-detect platform and pre-select
+    autoSelectOS();
+  } catch (e) { }
 })();
+
+function autoSelectOS() {
+  const ua = navigator.userAgent;
+  if (ua.includes('Win')) selectOS('windows');
+  else if (ua.includes('Mac')) selectOS('macos');
+  else selectOS('linux');
+}
+
+function selectOS(os) {
+  const btnActive = document.getElementById('download-btn-active');
+  const labelActive = document.getElementById('download-label-active');
+  const noteActive = document.getElementById('install-note-active');
+  if (!btnActive || !labelActive) return;
+
+  document.querySelectorAll('.os-card').forEach(c => {
+    c.classList.toggle('active', c.dataset.os === os);
+    c.setAttribute('aria-pressed', c.dataset.os === os);
+  });
+
+  const isWin = os === 'windows';
+  const asset = isWin ? dlAssets.win : dlAssets.lin;
+  const fallback = 'https://github.com/AumGupta/abyss-jellyfin/releases/latest';
+  const ext = isWin ? '.exe' : '.sh';
+  const platform = os === 'windows' ? 'Windows' : os === 'macos' ? 'macOS' : 'Linux';
+  const runNote = isWin
+    ? 'For Windows &middot; Requires Jellyfin admin credentials'
+    : `For ${platform} &middot; Run with: <code>sudo bash ${asset ? asset.name : 'abyss-setup.sh'}</code>`;
+
+  btnActive.href = asset ? asset.browser_download_url : fallback;
+  labelActive.textContent = asset ? `Download ${asset.name}` : `Download Installer ${ext}`;
+  noteActive.innerHTML = runNote;
+}
+
+// OS card click handlers
+document.querySelectorAll('.os-card').forEach(card => {
+  card.addEventListener('click', () => selectOS(card.dataset.os));
+});
 
 // Hamburger menu
 const hamburger = document.getElementById('nav-hamburger');

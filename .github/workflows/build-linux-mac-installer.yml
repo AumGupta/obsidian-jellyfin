@@ -1,4 +1,4 @@
-name: build-linux-installer
+name: build-linux-mac-installer
 
 on:
   push:
