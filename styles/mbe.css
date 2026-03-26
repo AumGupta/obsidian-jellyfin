@@ -1,0 +1,104 @@
+/* overrides for media-bar-enhanced v1.9.0.0 */
+
+#slides-container {
+    font-family: "Google Sans", sans-serif !important;
+    font-optical-sizing: auto !important;
+    font-style: normal !important;
+    font-variation-settings: "GRAD" 0 !important;
+}
+
+#slides-container #slide-counter,
+#slides-container .detailButton,
+#slides-container .misc-info,
+#slides-container .misc-info *:not(.material-icons),
+#slides-container .plot,
+#slides-container .genre,
+#slides-container .play-text {
+    font-family: inherit !important;
+}
+
+#slides-container .detailButton {
+    background: rgb(var(--abyss-accent)) !important;
+    color: #121212;
+    font-weight: 700;
+    border-radius: 12px !important;
+}
+
+#slides-container .favorite-button,
+#slides-container .detail-button {
+    background: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    padding: 8px !important;
+}
+
+#slides-container .misc-info {
+    gap: 0 !important;
+}
+
+#slides-container #slide-counter,
+#slides-container .star-rating-container,
+#slides-container .critic-rating,
+#slides-container .age-rating,
+#slides-container .runTime,
+#slides-container .date {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(40, 40, 40, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 4px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    white-space: nowrap;
+    border-radius: 8px;
+}
+
+#slides-container #slide-counter {
+    border-radius: 50px;
+    margin-right: 8px;
+}
+
+#slides-container .separator-icon {
+    color: transparent !important;
+    width: 4px !important;
+}
+
+#slides-container .plot {
+    font-size: medium;
+    font-weight: 500;
+    line-height: 1.4;
+    max-width: min(840px, 60vw);
+    margin-bottom: 22px !important;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: left;
+}
+
+#slides-container .genre {
+    font-weight: 500;
+    margin-top: 0.4rem;
+    font-size: large;
+    color: white !important;
+    opacity: 0.8;
+}
+
+#slides-container .button-container {
+    margin-top: 12px;
+}
+
+#slides-container .arrow {
+    top: 35%;
+}
+
+#slides-container .favorite-button.favorited::before {
+    animation: abyss-heart-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        abyss-heart-glow 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    color: rgb(249, 38, 114) !important;
+}
