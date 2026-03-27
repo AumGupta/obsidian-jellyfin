@@ -88,6 +88,8 @@ get_jellyfin_web_dir() {
         "/opt/homebrew/share/jellyfin/web"
         "/opt/homebrew/opt/jellyfin/web"
         "/usr/local/opt/jellyfin/web"
+        # Docker; jellyfin/jellfin (official image) 
+        "/jellyfin/jellyfin-web" # Note: this is the path inside the container, not on the host
     )
 
     for p in "${candidates[@]}"; do
