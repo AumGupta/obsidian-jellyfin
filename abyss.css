@@ -24,7 +24,7 @@
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
-    
+
     -webkit-font-feature-settings: 'liga';
     font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
@@ -141,8 +141,16 @@ progress::-webkit-progress-value {
 }
 
 .taskProgressInner,
-.sliderMarker.watched {
-    background: rgba(var(--abyss-accent), 0.75) !important;
+#videoOsdPage .sliderMarker.watched {
+    background: rgba(var(--abyss-accent), 1) !important;
+}
+
+#videoOsdPage .sliderMarker.unwatched {
+    background: hsl(0deg 0% 30%) !important;
+}
+
+.mdl-slider-background-flex {
+    background: hsl(0deg 0% 30%) !important;
 }
 
 #divRunningTasks span {
@@ -1026,6 +1034,23 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 /* Form Inputs */
+#homeScreenPreferencesPage,
+#languagePreferencesPage {
+    & form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    & .button-submit {
+        width: 97%;
+        align-self: center !important;
+    }
+}
+
+#quickConnectPreferencesPage .inputContainer {
+    text-align: center;
+}
 
 .emby-input,
 .emby-textarea {
@@ -1079,6 +1104,14 @@ input[type="checkbox"]:focus+.checkboxOutline {
     outline-offset: 2px;
 }
 
+#txtQuickConnectCode {
+    font-size: xxx-large;
+    font-weight: 900;
+    letter-spacing: 12px;
+    text-align: center;
+    margin-top: 12px;
+}
+
 /* Paper / Table */
 
 .sessionCardFooter {
@@ -1109,6 +1142,10 @@ input[type="checkbox"]:focus+.checkboxOutline {
 
 .subtitleappearance-preview #sliderVertical {
     margin: 24px !important;
+}
+
+.subtitle {
+    padding-left: 0 !important;
 }
 
 /* Others */
@@ -1542,7 +1579,6 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
 /* 11. LOGIN PAGE */
 
 #loginPage {
-    background: url(https://raw.githubusercontent.com/CTalvio/Ultrachromic/main/assets/background.png) !important;
     background-size: cover !important;
 }
 
@@ -1803,7 +1839,26 @@ div[data-role="controlgroup"] a[data-role="button"]:last-child {
         min-width: 45%;
         width: auto !important;
     }
-    .pageTitle {font-size: small;}
+
+    .pageTitle {
+        font-size: small;
+        font-weight: 500;
+    }
+
+    .sectionTitle {
+        font-size: 1.2em;
+        font-weight: 500;
+    }
+
+    .headerLeft,
+    .headerRight {
+        padding: 0 12px;
+    }
+
+    .detailImageContainer .cardImageContainer,
+    .detailImageContainer .card {
+        border-radius: 12px !important;
+    }
 }
 
 @media all and (min-width: 100em) {

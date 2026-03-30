@@ -27,8 +27,11 @@
     <meta name="twitter:image" content="https://aumgupta.github.io/abyss-jellyfin/assets/images/1.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" />
+    <link rel="icon" href="assets/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="shortcut icon" href="assets/favicon/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/favicon/apple-touch-icon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png" />
-    <link rel="manifest" href="site.webmanifest" />
+    <link rel="manifest" href="assets/favicon/site.webmanifest" />
     <meta name="theme-color" content="#080808" />
     <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,8 +42,9 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Abyss for Jellyfin",
+      "@type": "WebSite",
+      "name": "Abyss",
+      "alternateName": "Abyss for Jellyfin",
       "description": "A clean, minimal dark theme for Jellyfin with frosted glass surfaces, refined typography, and smooth transitions.",
       "url": "https://aumgupta.github.io/abyss-jellyfin/",
       "author": { "@type": "Person", "name": "AumGupta" },
@@ -317,10 +321,11 @@
 }
 
 <span class="c">/* Custom font: Import any Google Font and override body. */</span>
-<span class="prop">@import</span> <span class="val">url</span>(<span class="str">'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap'</span>);
+<span class="prop">@import</span> <span class="val">url</span>(<span class="str">'
+    https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap'</span>);
 
 <span class="sel">body</span> {
-    <span class="var">font-family</span>: <span class="val">"Inter"</span>, sans-serif;
+    <span class="var">font-family</span>: <span class="val">"Google Sans"</span>, sans-serif;
 }</code></pre>
                     </div>
                 </div>
@@ -509,7 +514,8 @@
                         Setup</a></strong>.
                 <br>
                 <br>Use additional plugins with Jellyfin? Follow the
-                <strong><a href="https://github.com/AumGupta/abyss-jellyfin/blob/main/SETUP.md#plugin-support">Plugin Support</a></strong> steps.
+                <strong><a href="https://github.com/AumGupta/abyss-jellyfin/blob/main/SETUP.md#plugin-support">Plugin
+                        Support</a></strong> steps.
             </p>
 
             <div class="install-links reveal">

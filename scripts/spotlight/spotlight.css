@@ -20,21 +20,21 @@ body {
 }
 
 #backdrop {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 1.2s var(--ease);
-    -webkit-mask-image:
-        linear-gradient(to bottom, black 40%, transparent 100%),
-        linear-gradient(to right, transparent 0%, black 25%, black 70%, transparent 100%),
-        linear-gradient(to bottom, transparent 0%, black 8%);
-    -webkit-mask-composite: source-in;
-    mask-image:
-        linear-gradient(to bottom, black 40%, transparent 100%),
-        linear-gradient(to right, transparent 0%, black 25%, black 70%, transparent 100%),
-        linear-gradient(to bottom, transparent 0%, black 8%);
-    mask-composite: intersect;
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	opacity: 0;
+	transition: opacity 1.2s var(--ease);
+	-webkit-mask-image:
+		linear-gradient(to bottom, black 40%, transparent 100%),
+		linear-gradient(to right, transparent 0%, black 25%, black 70%, transparent 100%),
+		linear-gradient(to bottom, transparent 0%, black 8%);
+	-webkit-mask-composite: source-in;
+	mask-image:
+		linear-gradient(to bottom, black 40%, transparent 100%),
+		linear-gradient(to right, transparent 0%, black 25%, black 70%, transparent 100%),
+		linear-gradient(to bottom, transparent 0%, black 8%);
+	mask-composite: intersect;
 }
 
 #backdrop img {
@@ -50,11 +50,11 @@ body {
 }
 
 #backdrop::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 15%);
+	content: '';
+	position: absolute;
+	inset: 0;
+	background:
+		linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 15%);
 }
 
 #content {
@@ -68,7 +68,7 @@ body {
 	-webkit-justify-content: flex-end;
 	justify-content: flex-end;
 	padding: 25vh 5vw 5vh;
-    padding: 25dvh 5vw 5vh;
+	padding: 25dvh 5vw 5vh;
 	opacity: 0;
 	transition: opacity 0.8s var(--ease);
 }
@@ -83,14 +83,21 @@ body {
 	object-fit: contain;
 	object-position: left bottom;
 	margin-bottom: 36px;
-	filter: drop-shadow(0 2px 12px rgba(0,0,0,0.7));
+	filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.7));
 	animation: logoSlide 1s var(--ease) both;
 	animation-delay: 0.3s;
 }
 
 @keyframes logoSlide {
-	from { opacity: 0; transform: translateY(12px); }
-	to   { opacity: 1; transform: translateY(0); }
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 #title {
@@ -99,8 +106,9 @@ body {
 	letter-spacing: -0.03em;
 	line-height: 1;
 	margin-bottom: 16px;
-	text-shadow: 0 2px 16px rgba(0,0,0,0.8);
-	display: none !important; /* [HIDDEN] */
+	text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
+	display: none !important;
+	/* [HIDDEN] */
 	animation: logoSlide 1s var(--ease) both;
 	animation-delay: 0.3s;
 }
@@ -108,7 +116,7 @@ body {
 #episode-label {
 	font-size: x-large;
 	font-weight: 700;
-	color: rgba(255,255,255,0.9);
+	color: rgba(255, 255, 255, 0.9);
 	margin-bottom: 12px;
 	letter-spacing: 0.02em;
 	animation: fadeUp 0.8s var(--ease) both;
@@ -128,47 +136,56 @@ body {
 }
 
 @keyframes fadeUp {
-	from { opacity: 0; transform: translateY(8px); }
-	to   { opacity: 1; transform: translateY(0); }
+	from {
+		opacity: 0;
+		transform: translateY(8px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 .meta-pill {
 	display: inline-flex;
-    align-items: center;
-    gap: 5px;
-	background: rgba(40,40,40,0.75);
+	align-items: center;
+	gap: 5px;
+	background: rgba(40, 40, 40, 0.75);
 	backdrop-filter: blur(8px);
 	-webkit-backdrop-filter: blur(8px);
-	border: 1px solid rgba(255,255,255,0.15);
+	border: 1px solid rgba(255, 255, 255, 0.15);
 	border-radius: 8px;
 	margin-right: 8px;
 	padding: 4px 12px;
 	font-size: 0.78rem;
 	font-weight: 600;
-	color: rgba(255,255,255,0.85);
+	color: rgba(255, 255, 255, 0.85);
 	white-space: nowrap;
 }
 
 .meta-pill svg {
-    flex-shrink: 0;
-    opacity: 0.8;
+	flex-shrink: 0;
+	opacity: 0.8;
 }
 
 .meta-dot {
-	display: none !important; /* [HIDDEN] */
+	display: none !important;
+	/* [HIDDEN] */
 	width: 3px;
 	height: 3px;
 	border-radius: 50%;
-	background: rgba(255,255,255,0.4);
+	background: rgba(255, 255, 255, 0.4);
 	-webkit-flex-shrink: 0;
 	flex-shrink: 0;
 }
 
 #progress-wrap {
-	display: none !important; /* [HIDDEN] */
+	display: none !important;
+	/* [HIDDEN] */
 	width: min(380px, 40vw);
 	height: 3px;
-	background: rgba(255,255,255,0.2);
+	background: rgba(255, 255, 255, 0.2);
 	border-radius: 2px;
 	margin-bottom: 14px;
 	overflow: hidden;
@@ -178,7 +195,7 @@ body {
 
 #progress-bar {
 	height: 100%;
-	background: rgba(255,255,255,0.85);
+	background: rgba(255, 255, 255, 0.85);
 	border-radius: 2px;
 	transition: width 0.6s var(--ease);
 }
@@ -186,7 +203,7 @@ body {
 #plot {
 	font-size: medium;
 	font-weight: 500;
-	color: rgba(255,255,255,0.65);
+	color: rgba(255, 255, 255, 0.65);
 	line-height: 1.4;
 	max-width: min(520px, 48vw);
 	margin-bottom: 22px;
@@ -226,7 +243,7 @@ body {
 .btn-play {
 	font-size: large;
 	border-radius: 12px !important;
-	background: rgba(255,255,255,0.95);
+	background: rgba(255, 255, 255, 0.95);
 	color: #111;
 	margin-right: 12px;
 }
@@ -234,21 +251,21 @@ body {
 .btn-play:hover {
 	background: #fff;
 	transform: scale(1.03);
-	box-shadow: 0 0 20px rgba(255,255,255,0.25);
+	box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
 }
 
 .btn-info {
-	background: rgba(255,255,255,0.12);
+	background: rgba(255, 255, 255, 0.12);
 	backdrop-filter: blur(8px);
 	-webkit-backdrop-filter: blur(8px);
-	border: 1px solid rgba(255,255,255,0.2) !important;
-	color: rgba(255,255,255,0.9);
+	border: 1px solid rgba(255, 255, 255, 0.2) !important;
+	color: rgba(255, 255, 255, 0.9);
 	padding: 8px;
 }
 
 .btn-info:hover {
-	background: rgba(255,255,255,1);
-	color: rgba(0,0,0,0.9);
+	background: rgba(255, 255, 255, 1);
+	color: rgba(0, 0, 0, 0.9);
 	transform: scale(1.05);
 }
 
@@ -270,7 +287,7 @@ body {
 	-webkit-justify-content: center;
 	justify-content: center;
 	font-size: 0.85rem;
-	color: rgba(255,255,255,0.3);
+	color: rgba(255, 255, 255, 0.3);
 	z-index: 3;
 }
 
@@ -282,4 +299,19 @@ body {
 	height: 100%;
 	z-index: 3;
 	cursor: pointer;
+}
+
+
+@media (max-width: 600px) and (orientation: portrait) {
+	#episode-label {
+		font-size: large;
+		font-weight: bold;
+	}
+}
+
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+	#episode-label {
+		font-size: large;
+		font-weight: bold;
+	}
 }

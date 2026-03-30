@@ -25,10 +25,10 @@
       .featurediframe { height: 52vh; min-height: 280px; max-height: 420px; }
     }
     @media (max-width: 600px) and (orientation: portrait) {
-      .featurediframe { height: 52vh; min-height: 260px; max-height: 360px; }
+      .featurediframe { height: 72vh; min-height: 260px;}
     }
     @media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
-      .featurediframe { height: 42vh; min-height: 200px; max-height: 280px; }
+      .featurediframe { height: 52vh; min-height: 200px;}
     }
   </style>
 
