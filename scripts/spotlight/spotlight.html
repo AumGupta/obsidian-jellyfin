@@ -26,8 +26,9 @@
 		<div id="plot"></div>
 		<div id="buttons"></div>
 	</div>
+	<div id="carousel-dots"></div>
 	<div id="clickzone"></div>
-	<div id="empty" style="display:none">Nothing in Continue Watching</div>
+	<div id="empty" style="display:none">Nothing to show</div>
 
 	<script>
 		(async () => {
@@ -73,187 +74,273 @@
 				return span;
 			}
 
-			function metaDot() {
-				const d = document.createElement('span');
-				d.className = 'meta-dot';
-				return d;
-			}
-
-			function navigateTo(path) {
-				try { window.top.location.href = path; } catch { window.location.href = path; }
+			function navigateTo(route) {
+				try { window.top.location.hash = route; }
+				catch { window.location.hash = route; }
 			}
 
 			async function fetchImageBlob(url, headers) {
 				try {
 					const res = await fetch(url, { headers });
 					if (!res.ok) return null;
-					const blob = await res.blob();
-					return URL.createObjectURL(blob);
+					return URL.createObjectURL(await res.blob());
 				} catch { return null; }
 			}
 
 			const base = getBaseUrl();
 			const { token, userId } = getAuth();
 
-			if (!token || !userId) {
-				$('empty').style.display = 'flex';
-				return;
-			}
+			if (!token || !userId) { $('empty').style.display = 'flex'; return; }
 
 			const headers = authHeaders(token);
-			let item = null;
 
-			try {
-				const res = await fetch(
-					`${base}/Users/${userId}/Items/Resume?Limit=1&Recursive=true&Fields=Overview,RunTimeTicks,UserData,OfficialRating,CommunityRating,SeriesName,SeriesId,ParentIndexNumber,IndexNumber,PlaybackPositionTicks`,
-					{ headers }
-				);
-				const data = await res.json();
-				item = data?.Items?.[0];
-			} catch (e) {
-				console.error('[Abyss Spotlight] fetch error:', e);
-			}
+			const FIELDS = 'Overview,RunTimeTicks,UserData,OfficialRating,CommunityRating,SeriesName,SeriesId,ParentIndexNumber,IndexNumber,PlaybackPositionTicks';
 
-			if (!item) {
-				$('empty').style.display = 'flex';
-				return;
-			}
-
-			const logoId = item.Type === 'Episode' ? (item.SeriesId || item.Id) : item.Id;
-			const detailId = item.Type === 'Episode' ? (item.SeriesId || item.Id) : item.Id;
-			const detailUrl = `/#!/details?id=${detailId}`;
-			const playUrl = `/#!/video?id=${item.Id}&startFromScratch=false`;
-
-			// Backdrop
-			const backdropImgEl = $('backdrop-img');
-			const backdropEl = $('backdrop');
-
-			const primaryUrl = `${base}/Items/${item.Id}/Images/Primary?quality=90`;
-			const backdropUrl = `${base}/Items/${item.Type === 'Episode' ? (item.SeriesId || item.Id) : item.Id}/Images/Backdrop/0?quality=90`;
-
-			let backdropBlob = null;
-			if (item.Type === 'Episode') {
-				backdropBlob = await fetchImageBlob(primaryUrl, headers);
-				if (!backdropBlob) backdropBlob = await fetchImageBlob(backdropUrl, headers);
-				if (backdropBlob) backdropImgEl.style.objectPosition = 'center center';
-			} else {
-				backdropBlob = await fetchImageBlob(backdropUrl, headers);
-				if (backdropBlob) backdropImgEl.style.objectPosition = 'center 20%';
-			}
-
-			if (backdropBlob) {
-				backdropImgEl.onload = () => backdropEl.classList.add('loaded');
-				backdropImgEl.src = backdropBlob;
-			} else {
-				backdropEl.classList.add('loaded');
-			}
-
-			// Logo
-			const logoEl = $('logo');
-			const logoBlobUrl = await fetchImageBlob(`${base}/Items/${logoId}/Images/Logo?quality=90`, headers);
-			if (logoBlobUrl) {
-				logoEl.src = logoBlobUrl;
-				logoEl.style.display = 'block';
-			} else {
-				logoEl.style.display = 'none';
-				$('title').style.display = 'block';
-				$('title').textContent = item.Type === 'Episode' ? item.SeriesName : item.Name;
-			}
-
-			// Episode label + button prefix
-			let episodePrefix = '';
-			if (item.Type === 'Episode') {
-				const parts = [];
-				if (item.ParentIndexNumber != null && item.IndexNumber != null) {
-					episodePrefix = `S${item.ParentIndexNumber} E${item.IndexNumber}`;
-					parts.push(episodePrefix);
-				}
-				if (item.Name) parts.push(item.Name);
-				$('episode-label').textContent = parts.join('  -  ');
-			}
-
-			// Buttons
-			const buttonsEl = $('buttons');
-
-			const playBtn = document.createElement('button');
-			playBtn.className = 'btn btn-play';
-			playBtn.id = 'play-btn';
-			playBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M320-273v-414q0-17 12-28.5t28-11.5q5 0 10.5 1.5T381-721l326 207q9 6 13.5 15t4.5 19q0 10-4.5 19T707-446L381-239q-5 3-10.5 4.5T360-233q-16 0-28-11.5T320-273Z"/></svg>${item.Type === 'Episode' ? `Continue  ${episodePrefix}` : 'Resume'}`;
-			playBtn.onclick = e => {
-				e.preventDefault();
+			async function fetchItems() {
+				let items = [];
 				try {
-					// Find the resume button for this item in the parent page's DOM
-					const parentDoc = window.top.document;
+					const [resumeRes, nextUpRes] = await Promise.all([
+						fetch(`${base}/Users/${userId}/Items/Resume?Limit=3&Recursive=true&Fields=${FIELDS}`, { headers }),
+						fetch(`${base}/Shows/NextUp?Limit=5&UserId=${userId}&Fields=${FIELDS}`, { headers })
+					]);
+					const resumeData = resumeRes.ok ? await resumeRes.json() : {};
+					const nextUpData = nextUpRes.ok ? await nextUpRes.json() : {};
+					items = [
+						...(resumeData.Items || []).map(i => ({ ...i, _source: 'resume' })),
+						...(nextUpData.Items || []).map(i => ({ ...i, _source: 'nextup' }))
+					];
+					// De-duplicate by Id
+					items = items.filter((item, idx, self) => idx === self.findIndex(t => t.Id === item.Id));
+				} catch (e) { console.error('[Abyss Spotlight] fetch error:', e); }
 
-					// Look for a card with matching data-id that has a resume action
-					const resumeBtn = parentDoc.querySelector(
-						`[data-id="${item.Id}"][data-action="resume"], 
-             [data-id="${item.Id}"] [data-action="resume"]`
-					);
-
-					if (resumeBtn) {
-						resumeBtn.click();
-						return;
-					}
-
-					// Fallback — try any resume button for this item
-					const cardBtn = parentDoc.querySelector(`[data-id="${item.Id}"]`);
-					if (cardBtn) {
-						cardBtn.click();
-						return;
-					}
-				} catch (err) {
-					console.warn('[Abyss Spotlight] Could not trigger playback:', err);
+				// Fallback: random movies/shows when queue is empty
+				if (items.length === 0) {
+					try {
+						const fallbackRes = await fetch(
+							`${base}/Users/${userId}/Items?Limit=8&Recursive=true&SortBy=Random&IncludeItemTypes=Movie,Series&Fields=${FIELDS}`,
+							{ headers }
+						);
+						if (fallbackRes.ok) {
+							const d = await fallbackRes.json();
+							items = (d.Items || []).map(i => ({ ...i, _source: 'random' }));
+						}
+					} catch (e) { console.error('[Abyss Spotlight] fallback fetch error:', e); }
 				}
 
-				// Final fallback — go to detail page
-				navigateTo(detailUrl);
-			};
-			buttonsEl.appendChild(playBtn);
-
-			// Meta pills
-			const metaEl = $('meta');
-
-			if (item.OfficialRating) {
-				metaEl.appendChild(metaPillWithIcon(
-					`<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e3e3e3"><path d="M168-144q-29 0-50.5-21.5T96-216v-528q0-29.7 21.5-50.85Q139-816 168-816h624q29 0 50.5 21.15T864-744v528q0 29-21.5 50.5T792-144H168Zm337.5-154.35Q516-308.7 516-324v-168q0-15.3-10.29-25.65Q495.42-528 480.21-528t-25.71 10.35Q444-507.3 444-492v168q0 15.3 10.29 25.65Q464.58-288 479.79-288t25.71-10.35ZM480-600q14 0 25-11t11-25.5q0-14.5-11-25T479.5-672q-14.5 0-25 10.35T444-636q0 14 10.35 25T480-600ZM168-228h72v-72h-72v72Zm552 0h72v-72h-72v72ZM168-372h72v-72h-72v72Zm552 0h72v-72h-72v72ZM168-516h72v-72h-72v72Zm552 0h72v-72h-72v72ZM168-660h72v-72h-72v72Zm552 0h72v-72h-72v72Z"/></svg>`,
-					item.OfficialRating
-				));
+				return items;
 			}
 
-			const rt = formatRuntime(item.RunTimeTicks);
-			if (rt) {
-				metaEl.appendChild(metaPillWithIcon(
-					`<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e3e3e3"><path d="M516-510v-174q0-15.3-10.29-25.65Q495.42-720 480.21-720t-25.71 10.35Q444-699.3 444-684v189q0 8 3 14.5t8 11.5l133.85 133.85Q600-324 614.5-324.5 629-325 640-336t11-25.5q0-14.5-11.34-25.75L516-510ZM480-96q-79.38 0-149.19-30T208.5-208.5Q156-261 126-330.96t-30-149.5Q96-560 126-630q30-70 82.5-122t122.46-82q69.96-30 149.5-30t149.55 30.24q70 30.24 121.79 82.08 51.78 51.84 81.99 121.92Q864-559.68 864-480q0 79.38-30 149.19T752-208.5Q700-156 629.87-126T480-96Z"/></svg>`,
-					rt
-				));
-			}
-			if (item.CommunityRating) {
-				metaEl.appendChild(metaPillWithIcon(
-					`<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e3e3e3"><path d="m480-285-164 98q-11 6-21.5 5t-18.5-7q-8-6-12-16.5t-1-21.5l43-183-145-123q-9-8-11-18.5t1-20.5q3-10 11-16.5t20-7.5l190-17 75-174q5-11 14-16.5t19-5.5q10 0 19 5.5t14 16.5l75 175 190 16q12 1 20 8t11 17q3 10 .5 20T798-533L654-410l43 183q3 11-1 21.5T684-189q-8 6-18.5 7t-21.5-5l-164-98Z"/></svg>`,
-					item.CommunityRating.toFixed(1)
-				));
-			}
+			let items = [];
+			let currentIndex = 0;
+			let autoTimer = null;
+			const AUTO_INTERVAL = 5000;
 
-			// Progress bar
-			const played = item.UserData?.PlayedPercentage;
-			if (played && played > 0) {
-				$('progress-wrap').style.display = 'block';
-				$('progress-bar').style.width = `${Math.min(played, 100)}%`;
+			function startAuto() {
+				stopAuto();
+				if (items.length <= 1) return;
+				autoTimer = setInterval(() => {
+					currentIndex = (currentIndex + 1) % items.length;
+					renderItem(currentIndex);
+				}, AUTO_INTERVAL);
 			}
 
-			// Plot
-			$('plot').textContent = item.Overview || '';
+			function stopAuto() {
+				if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+			}
 
-			const infoBtn = document.createElement('a');
-			infoBtn.className = 'btn btn-info';
-			infoBtn.href = '#';
-			infoBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M423.5-703.5Q400-727 400-760t23.5-56.5Q447-840 480-840t56.5 23.5Q560-793 560-760t-23.5 56.5Q513-680 480-680t-56.5-23.5Zm14 566Q420-155 420-180v-360q0-25 17.5-42.5T480-600q25 0 42.5 17.5T540-540v360q0 25-17.5 42.5T480-120q-25 0-42.5-17.5Z"/></svg>`;
-			infoBtn.onclick = e => { e.preventDefault(); navigateTo(detailUrl); };
-			buttonsEl.appendChild(infoBtn);
+			// Pause on hover; resume on leave [Can be done]
+			// document.body.addEventListener('mouseenter', stopAuto);
+			// document.body.addEventListener('mouseleave', startAuto);
 
-			$('clickzone').onclick = () => navigateTo(detailUrl);
-			$('content').classList.add('visible');
+			function buildDots() {
+				const container = $('carousel-dots');
+				container.innerHTML = '';
+				if (items.length <= 1) { container.style.display = 'none'; return; }
+				container.style.display = 'flex';
+				items.forEach((_, i) => {
+					const dot = document.createElement('button');
+					dot.className = 'dot';
+					dot.setAttribute('aria-label', `Item ${i + 1}`);
+					dot.addEventListener('click', e => {
+						e.stopPropagation();
+						stopAuto();
+						currentIndex = i;
+						renderItem(i);
+						startAuto();
+					});
+					container.appendChild(dot);
+				});
+				updateDots();
+			}
+
+			function updateDots() {
+				const dots = [...$('carousel-dots').querySelectorAll('.dot')];
+				dots.forEach((dot, i) => {
+					const dist = Math.abs(i - currentIndex);
+					dot.className = 'dot' + (
+						dist === 0 ? ' dot-active' :
+							dist === 1 ? ' dot-near' :
+								dist === 2 ? ' dot-far' : ' dot-hidden'
+					);
+				});
+			}
+
+			async function renderItem(index) {
+				const item = items[index];
+				if (!item) return;
+				
+				
+				$('content').style.transform = 'translateY(10px)';
+				$('content').style.opacity = '0';
+				$('backdrop').style.opacity = '0';
+				$('backdrop').classList.remove('loaded');
+				$('content').classList.remove('visible');
+				updateDots();
+				await new Promise(r => setTimeout(r, 400));
+				
+
+				const isEp = item.Type === 'Episode';
+				const logoId = isEp ? (item.SeriesId || item.Id) : item.Id;
+				const detailId = isEp ? (item.SeriesId || item.Id) : item.Id;
+				const detailRoute = `/details?id=${detailId}`;
+				const playRoute = `/video?id=${item.Id}`;
+
+				// Backdrop
+				const backdropImgEl = $('backdrop-img');
+				const backdropEl = $('backdrop');
+				const primaryUrl = `${base}/Items/${item.Id}/Images/Primary?quality=90`;
+				const backdropUrl = `${base}/Items/${isEp ? (item.SeriesId || item.Id) : item.Id}/Images/Backdrop/0?quality=90`;
+
+				let backdropBlob = null;
+				if (isEp) {
+					backdropBlob = await fetchImageBlob(primaryUrl, headers);
+					backdropImgEl.style.objectPosition = 'center center';
+					if (!backdropBlob) {
+						backdropBlob = await fetchImageBlob(backdropUrl, headers);
+						backdropImgEl.style.objectPosition = 'center 20%';
+					}
+				} else {
+					backdropBlob = await fetchImageBlob(backdropUrl, headers);
+					backdropImgEl.style.objectPosition = 'center 20%';
+				}
+
+				if (backdropBlob) {
+					backdropImgEl.onload = () => backdropEl.classList.add('loaded');
+					backdropImgEl.src = backdropBlob;
+				} else {
+					backdropEl.classList.add('loaded');
+				}
+
+				// Logo / title
+				const logoEl = $('logo');
+				const titleEl = $('title');
+				const logoBlobUrl = await fetchImageBlob(`${base}/Items/${logoId}/Images/Logo?quality=90`, headers);
+				if (logoBlobUrl) {
+					logoEl.src = logoBlobUrl;
+					logoEl.style.display = 'block';
+					titleEl.style.display = 'none';
+				} else {
+					logoEl.style.display = 'none';
+					titleEl.style.display = 'block';
+					titleEl.textContent = isEp ? item.SeriesName : item.Name;
+				}
+
+				// Episode label
+				let episodePrefix = '';
+				const episodeLabelEl = $('episode-label');
+				if (isEp) {
+					const parts = [];
+					if (item.ParentIndexNumber != null && item.IndexNumber != null) {
+						episodePrefix = `S${item.ParentIndexNumber} E${item.IndexNumber}`;
+						parts.push(episodePrefix);
+					}
+					if (item.Name) parts.push(item.Name);
+					episodeLabelEl.textContent = parts.join('  \u2013  ');
+					episodeLabelEl.style.display = 'block';
+				} else {
+					episodeLabelEl.textContent = '';
+					episodeLabelEl.style.display = 'none';
+				}
+
+				// Buttons
+				const buttonsEl = $('buttons');
+				buttonsEl.innerHTML = '';
+
+				const playBtn = document.createElement('button');
+				playBtn.className = 'btn btn-play';
+				const isResume = item._source === 'resume';
+				const btnLabel = isResume
+					? (isEp ? `Continue ${episodePrefix}` : 'Resume')
+					: (isEp ? `Play ${episodePrefix}`.trim() : 'Play');
+				playBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M320-273v-414q0-17 12-28.5t28-11.5q5 0 10.5 1.5T381-721l326 207q9 6 13.5 15t4.5 19q0 10-4.5 19T707-446L381-239q-5 3-10.5 4.5T360-233q-16 0-28-11.5T320-273Z"/></svg>${btnLabel}`;
+
+				playBtn.onclick = e => {
+					e.preventDefault();
+					try {
+						const parentDoc = window.top.document;
+						// Try resume then play action buttons first
+						const actionBtn = parentDoc.querySelector(
+							`[data-id="${item.Id}"][data-action="resume"],` +
+							`[data-id="${item.Id}"] [data-action="resume"],` +
+							`[data-id="${item.Id}"][data-action="play"],` +
+							`[data-id="${item.Id}"] [data-action="play"]`
+						);
+						if (actionBtn) { actionBtn.click(); return; }
+						// Fallback: click the card
+						const card = parentDoc.querySelector(`[data-id="${item.Id}"]`);
+						if (card) { card.click(); return; }
+					} catch (err) {
+						console.warn('[Abyss Spotlight] Could not trigger playback:', err);
+					}
+					// Final fallback: navigate via hash
+					navigateTo(playRoute);
+				};
+				buttonsEl.appendChild(playBtn);
+
+				const infoBtn = document.createElement('a');
+				infoBtn.className = 'btn btn-info';
+				infoBtn.href = '#';
+				infoBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M423.5-703.5Q400-727 400-760t23.5-56.5Q447-840 480-840t56.5 23.5Q560-793 560-760t-23.5 56.5Q513-680 480-680t-56.5-23.5Zm14 566Q420-155 420-180v-360q0-25 17.5-42.5T480-600q25 0 42.5 17.5T540-540v360q0 25-17.5 42.5T480-120q-25 0-42.5-17.5Z"/></svg>`;
+				infoBtn.onclick = e => { e.preventDefault(); navigateTo(detailRoute); };
+				buttonsEl.appendChild(infoBtn);
+
+				// Meta pills
+				const metaEl = $('meta');
+				metaEl.innerHTML = '';
+				const SVG_RATING = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e3e3e3"><path d="M168-144q-29 0-50.5-21.5T96-216v-528q0-29.7 21.5-50.85Q139-816 168-816h624q29 0 50.5 21.15T864-744v528q0 29-21.5 50.5T792-144H168Zm337.5-154.35Q516-308.7 516-324v-168q0-15.3-10.29-25.65Q495.42-528 480.21-528t-25.71 10.35Q444-507.3 444-492v168q0 15.3 10.29 25.65Q464.58-288 479.79-288t25.71-10.35ZM480-600q14 0 25-11t11-25.5q0-14.5-11-25T479.5-672q-14.5 0-25 10.35T444-636q0 14 10.35 25T480-600ZM168-228h72v-72h-72v72Zm552 0h72v-72h-72v72ZM168-372h72v-72h-72v72Zm552 0h72v-72h-72v72ZM168-516h72v-72h-72v72Zm552 0h72v-72h-72v72ZM168-660h72v-72h-72v72Zm552 0h72v-72h-72v72Z"/></svg>`;
+				const SVG_CLOCK = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e3e3e3"><path d="M516-510v-174q0-15.3-10.29-25.65Q495.42-720 480.21-720t-25.71 10.35Q444-699.3 444-684v189q0 8 3 14.5t8 11.5l133.85 133.85Q600-324 614.5-324.5 629-325 640-336t11-25.5q0-14.5-11.34-25.75L516-510ZM480-96q-79.38 0-149.19-30T208.5-208.5Q156-261 126-330.96t-30-149.5Q96-560 126-630q30-70 82.5-122t122.46-82q69.96-30 149.5-30t149.55 30.24q70 30.24 121.79 82.08 51.78 51.84 81.99 121.92Q864-559.68 864-480q0 79.38-30 149.19T752-208.5Q700-156 629.87-126T480-96Z"/></svg>`;
+				const SVG_STAR = `<svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#e3e3e3"><path d="m480-285-164 98q-11 6-21.5 5t-18.5-7q-8-6-12-16.5t-1-21.5l43-183-145-123q-9-8-11-18.5t1-20.5q3-10 11-16.5t20-7.5l190-17 75-174q5-11 14-16.5t19-5.5q10 0 19 5.5t14 16.5l75 175 190 16q12 1 20 8t11 17q3 10 .5 20T798-533L654-410l43 183q3 11-1 21.5T684-189q-8 6-18.5 7t-21.5-5l-164-98Z"/></svg>`;
+
+				if (item.OfficialRating) metaEl.appendChild(metaPillWithIcon(SVG_RATING, item.OfficialRating));
+				const rt = formatRuntime(item.RunTimeTicks);
+				if (rt) metaEl.appendChild(metaPillWithIcon(SVG_CLOCK, rt));
+				if (item.CommunityRating) metaEl.appendChild(metaPillWithIcon(SVG_STAR, item.CommunityRating.toFixed(1)));
+
+				// Progress bar; only for resume items
+				const played = item.UserData?.PlayedPercentage;
+				if (played && played > 0 && isResume) {
+					$('progress-wrap').style.display = 'block';
+					$('progress-bar').style.width = `${Math.min(played, 100)}%`;
+				} else {
+					$('progress-wrap').style.display = 'none';
+				}
+
+
+				$('plot').textContent = item.Overview || '';
+				$('clickzone').onclick = () => navigateTo(detailRoute);
+
+				$('content').style.transform = '';
+				$('content').style.opacity = '';
+				$('backdrop').style.opacity = '';
+				$('backdrop').classList.add('loaded');
+				$('content').classList.add('visible');
+			}
+
+			items = await fetchItems();
+			if (!items.length) { $('empty').style.display = 'flex'; return; }
+			buildDots();
+			await renderItem(0);
+			startAuto();
 
 		})();
 	</script>
